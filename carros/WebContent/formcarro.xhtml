@@ -1,0 +1,103 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form styleClass="form-horizontal">
+		<fieldset>
+			<legend>
+				<h3>
+					<h:outputText value="#{msg['label.carro']}" />
+					<small> <h:outputText value="#{subtitle}" /></small>
+				</h3>
+			</legend>
+
+			<div class="control-group">
+				<label class="control-label"><h:outputText
+						value="#{msg['label.carro.placa']}" /></label>
+				<div class="controls">
+					<h:inputText value="#{carroBean.carro.placa}"
+						label="#{msg['label.carro.placa']}" required="true"
+						styleClass="input-large">
+						<f:validateLength minimum="7" maximum="7" />
+					</h:inputText>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><h:outputText
+						value="#{msg['label.carro.marca']}" /></label>
+				<div class="controls">
+					<p:selectOneMenu value="#{carroBean.carro.marca.descricao}"
+						label="#{msg['label.carro.marca']}" required="true">
+						<f:selectItem itemLabel="#{msg['label.selecione']}" itemValue="" />
+						<f:selectItems value="#{carroBean.marcas}" var="item"
+							itemLabel="#{item.descricao}" itemValue="#{item}" />
+					</p:selectOneMenu>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><h:outputText
+						value="#{msg['label.carro.modelo']}" /></label>
+				<div class="controls">
+					<p:selectOneMenu value="#{carroBean.carro.modelo.descricao}"
+						label="#{msg['label.carro.marca']}" required="true"
+						disabled="true">
+						<f:selectItem itemLabel="#{msg['label.selecione']}" itemValue="" />
+						<f:selectItems value="#{carroBean.modelos}" var="item"
+							itemLabel="#{item.descricao}" itemValue="#{item}" />
+					</p:selectOneMenu>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><h:outputText
+						value="#{msg['label.carro.cor']}" /></label>
+				<div class="controls">
+					<h:inputText value="#{carroBean.carro.cor}"
+						label="#{msg['label.carro.cor']}" required="true"
+						styleClass="input-small">
+					</h:inputText>
+				</div>
+			</div>
+
+		</fieldset>
+		<div class="control-group">
+			<div class="controls">
+				<p:commandButton value="#{msg['button.salvar']}"
+					action="#{carroBean.salvar}" styleClass="btn btn-success"
+					onclick="dlg.show();" oncomplete="dlg.hide();"
+					rendered="#{carroBean.carro != null}" />
+				<p:button value="#{msg['button.cancelar']}" outcome="listacarros"
+					styleClass="btn">
+					<f:param name="active" value="lista" />
+				</p:button>
+				<p:commandButton value="#{msg['button.excluir']}"
+					onclick="confirmation.show()"
+					rendered="#{carroBean.carro.placa != null}" immediate="true"
+					styleClass="btn btn-danger" />
+			</div>
+		</div>
+
+		<p:dialog id="dialog" header="#{msg['dialog.emexecucao.titulo']}"
+			widgetVar="dlg" dynamic="true" modal="true">
+			<h:outputText value="#{msg['dialog.emexecucao.aguarde']}" />
+		</p:dialog>
+
+		<p:confirmDialog id="confirmDialog"
+			message="#{msg['excluir.carro.confirma']}"
+			header="#{msg['excluir.carro']}" severity="alert"
+			widgetVar="confirmation">
+			<p:commandButton id="confirm" value="#{msg['confirma.sim']}"
+				update="messages" oncomplete="confirmation.hide()"
+				action="#{carroBean.remover}" />
+			<p:commandButton id="decline" value="#{msg['confirma.nao']}"
+				onclick="confirmation.hide()" type="button" />
+		</p:confirmDialog>
+
+		<p:messages id="messages" showDetail="false" autoUpdate="true"
+			closable="true" />
+	</h:form>
+</ui:fragment>
