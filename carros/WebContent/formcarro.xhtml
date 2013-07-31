@@ -29,11 +29,12 @@
 				<label class="control-label"><h:outputText
 						value="#{msg['label.carro.marca']}" /></label>
 				<div class="controls">
-					<p:selectOneMenu value="#{carroBean.carro.marca.descricao}"
+					<p:selectOneMenu value="#{carroBean.carro.marca}"
 						label="#{msg['label.carro.marca']}" required="true">
 						<f:selectItem itemLabel="#{msg['label.selecione']}" itemValue="" />
 						<f:selectItems value="#{carroBean.marcas}" var="item"
 							itemLabel="#{item.descricao}" itemValue="#{item}" />
+							<p:ajax event="change" listener="#{carroBean.selecionaMarca}" update="modelo" />
 					</p:selectOneMenu>
 				</div>
 			</div>
@@ -42,9 +43,9 @@
 				<label class="control-label"><h:outputText
 						value="#{msg['label.carro.modelo']}" /></label>
 				<div class="controls">
-					<p:selectOneMenu value="#{carroBean.carro.modelo.descricao}"
+					<p:selectOneMenu id="modelo" value="#{carroBean.carro.modelo}"
 						label="#{msg['label.carro.marca']}" required="true"
-						disabled="true">
+						disabled="#{empty carroBean.carro.marca}">
 						<f:selectItem itemLabel="#{msg['label.selecione']}" itemValue="" />
 						<f:selectItems value="#{carroBean.modelos}" var="item"
 							itemLabel="#{item.descricao}" itemValue="#{item}" />

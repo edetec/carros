@@ -9,19 +9,18 @@ import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ValueChangeEvent;
 
 import com.carros.mock.CarrosMock;
 import com.carros.model.Carro;
 import com.carros.model.Marca;
 import com.carros.model.Modelo;
+import com.carros.service.CarrosService;
 
 /**
- * Componente responsável por integrar o front-end (páginas JSF) c/ camada de serviço (EJB), para resolver o cadastro de <code>Carro</code>.
- * 
- * <p>Trata-se de um <code>Managed Bean</code>, ou seja, as instÃ¢ncias dessa classe são controladas pelo <code>JSF</code>. Um objeto é criado ao carregar alguma página do cadastro (Lista / Novo / Editar). Enquanto a página permanecer aberta no browser, o objeto <code>CarroMB</code> permanece no servidor.</p>
  * 
  * <p>Esse componente resolve o fluxo de navegação e liga os componentes visuais com os dados.</p>
  * 
@@ -30,18 +29,16 @@ import com.carros.model.Modelo;
 @RequestScoped
 public class CarroBean implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
-	private Long idSelecionado;
+	private String placaSelecionado;
 	
-	private CarrosMock service; 
+	private CarrosService service; 
 	/**
 	 * Lista com o(s) <code>Carro</code>(s) apresentandas no <code>Datatable</code>.
 	 */
 	private List<Carro> carros;
-	
-	private List<Marca> marcas;
-	private List<Modelo> modelos;
+//	
+//	private List<Marca> marcas;
+//	private List<Modelo> modelos;
 	
 	/**
 	 * Referência para o carro utiliza na inclusão (nova) ou edição.
@@ -50,41 +47,35 @@ public class CarroBean implements Serializable {
 	
 	
 	public CarroBean() {
-		service = new CarrosMock();
-		marcas = new ArrayList<Marca>();
+		service = CarrosMock.getInstance();
 	}
 	
-	public void setIdSelecionado(Long idSelecionado) {
-		this.idSelecionado = idSelecionado;
+	public void setPlacaSelecionado(String placaSelecionado) {
+		this.placaSelecionado = placaSelecionado;
 	}
 	
-	public Long getIdSelecionado() {
-		return idSelecionado;
+	public String getPlacaSelecionado() {
+		return placaSelecionado;
 	}
 	
 	public Carro getCarro() {
-		if(carros == null){
-			carros = service.getCarros();
-		}
 		return carro;
 	}
 	
 	public void incluir(){
 		carro = new Carro();
-		//log.debug("Pronto pra incluir");
 	}
 	
 	public void editar() {
-		if (idSelecionado == null) {
+		if (placaSelecionado == null) {
 			return;
 		}
-//		carro = service.find(idSelecionado);
-		//log.debug("Pronto pra editar");
+		carro = service.buscarCarro(placaSelecionado);
 	}
 	
 	public List<Carro> getCarros() {
-		if (carros == null) {
-			carros = new ArrayList<Carro>();
+		if(carros == null){
+			carros = service.listarTodos();
 		}
 		return carros;
 	}
@@ -92,25 +83,21 @@ public class CarroBean implements Serializable {
 	
 	public String salvar() {
 		try {
-//			service.save(carro);
+			service.salvar(carro);
 		} catch(Exception ex) {
-			//log.error("Erro ao salvar carro.", ex);
 			addMessage(getMessageFromI18N("msg.erro.salvar.carro"), ex.getMessage());
 			return "";
 		}
-		//log.debug("Salvour carro "+carro.getId());
 		return "listacarros";
 	}
 	
 	public String remover() {
 		try {
-//			service.remove(carro);
+			service.remover(carro);
 		} catch(Exception ex) {
-			//log.error("Erro ao remover carro.", ex);
 			addMessage(getMessageFromI18N("msg.erro.remover.carro"), ex.getMessage());
 			return "";
 		}
-		//log.debug("Removeu carro "+carro.getId());
 		return "listacarros";
 	}
 	
@@ -133,19 +120,14 @@ public class CarroBean implements Serializable {
 	}
 
 	public List<Marca> getMarcas() {
-		return marcas;
-	}
-
-	public void setMarcas(List<Marca> marcas) {
-		this.marcas = marcas;
+		return service.getMarcas();
 	}
 
 	public List<Modelo> getModelos() {
-		return modelos;
-	}
-
-	public void setModelos(List<Modelo> modelos) {
-		this.modelos = modelos;
+		return service.getModelos(carro.getMarca());
 	}
 	
+	public void selecionaModelo(ValueChangeEvent e){
+		carro.setMarca((Marca) e.getNewValue());
+	}
 }
