@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/layout/template.xhtml">
+	<ui:define name="pageTitle">
+		<h:outputText value="#{msg['page.title.lista.carro']}" />
+	</ui:define>
+	<ui:define name="content">
+		<div style="border-bottom: 1px solid #E5E5E5;">
+			<h3>
+				<h:outputText value="#{msg['label.carros']}" />
+				<small> <h:outputText value="#{msg['label.listagem']}" /></small>
+			</h3>
+		</div>
+		<h:form>
+			<p:dataTable id="dataTable" var="carro"
+				value="#{carroBean.carros}" paginator="true" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15" currentPageReportTemplate="{currentPage} #{msg['label.preposicao']} {totalPages}"
+				emptyMessage="#{msg['msg.vazio']}">
+				<p:column sortBy="#{carro.placa}">
+					<f:facet name="header">
+						<h:outputText value="#{msg['label.carro.placa']}" />
+					</f:facet>
+					<h:outputText value="#{carro.placa}" />
+				</p:column>
+	
+				<p:column sortBy="#{carro.marca.descricao}">
+					<f:facet name="header">
+						<h:outputText value="#{msg['label.carro.marca']}" />
+					</f:facet>
+					<h:link outcome="editarcarro" value="#{carro.marca.descricao}"
+						title="#{msg['label.editar']} #{carro.marca.descricao}">
+						<f:param name="id" value="#{carro.placa}" />
+					</h:link>
+				</p:column>
+	
+				<p:column sortBy="#{carro.modelo.descricao}">
+					<f:facet name="header">
+						<h:outputText value="#{msg['label.carro.modelo']}" />
+					</f:facet>
+					<h:outputText value="#{carro.modelo.descricao}" />
+				</p:column>
+	
+				<p:column sortBy="#{carro.cor}">
+					<f:facet name="header">
+						<h:outputText value="#{msg['label.carro.cor']}" />
+					</f:facet>
+					<h:outputText value="#{carro.cor}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<h:messages />
+	</ui:define>
+</ui:composition>
+</html>
