@@ -29,12 +29,12 @@
 				<label class="control-label"><h:outputText
 						value="#{msg['label.carro.marca']}" /></label>
 				<div class="controls">
-					<p:selectOneMenu value="#{carroBean.carro.marca}"
-						label="#{msg['label.carro.marca']}" required="true">
+					<p:selectOneMenu id="marca" value="#{carroBean.marca}"
+						label="#{msg['label.carro.marca']}" required="true" converter="marcaConverter">
 						<f:selectItem itemLabel="#{msg['label.selecione']}" itemValue="" />
 						<f:selectItems value="#{carroBean.marcas}" var="item"
 							itemLabel="#{item.descricao}" itemValue="#{item}" />
-							<p:ajax event="change" listener="#{carroBean.selecionaMarca}" update="modelo" />
+							<p:ajax update="modelo" listener="#{carroBean.marcaSelecinada}"/>
 					</p:selectOneMenu>
 				</div>
 			</div>
@@ -44,8 +44,8 @@
 						value="#{msg['label.carro.modelo']}" /></label>
 				<div class="controls">
 					<p:selectOneMenu id="modelo" value="#{carroBean.carro.modelo}"
-						label="#{msg['label.carro.marca']}" required="true"
-						disabled="#{empty carroBean.carro.marca}">
+						label="#{msg['label.carro.marca']}" required="true" converter="modeloConverter"
+						disabled="#{empty carroBean.marca}">
 						<f:selectItem itemLabel="#{msg['label.selecione']}" itemValue="" />
 						<f:selectItems value="#{carroBean.modelos}" var="item"
 							itemLabel="#{item.descricao}" itemValue="#{item}" />

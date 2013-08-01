@@ -1,32 +1,32 @@
-package com.carros.mock;
+package com.carros.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateful;
+import javax.enterprise.context.ApplicationScoped;
+
 import com.carros.model.Carro;
 import com.carros.model.Marca;
 import com.carros.model.Modelo;
-import com.carros.service.CarrosService;
 
-public class CarrosMock implements CarrosService {
-	private static CarrosMock carrosMock;
+/**
+ * Session Bean implementation class CarroService
+ */
+@Stateful
+public class CarroService {
+
 	private Map<String, Carro> carros;
 	private List<Marca> marcas;
 	private Map<Integer, List<Modelo>> modelos;
 
-	private CarrosMock() {
+	public CarroService() {
 		initMarcas();
 		initModelos();
 		initCarros();
-	}
-
-	public static CarrosService getInstance() {
-		if (carrosMock == null) {
-			carrosMock = new CarrosMock();
-		}
-		return carrosMock;
 	}
 
 	private void initMarcas() {
@@ -100,35 +100,31 @@ public class CarrosMock implements CarrosService {
 
 	}
 
-	@Override
 	public List<Carro> listarTodos() {
-		return new ArrayList(carros.values());
+		System.out.println(this);
+		return new ArrayList<Carro>(carros.values());
 	}
 
-	@Override
 	public void salvar(Carro carro) {
+		System.out.println(this);
 		carros.put(carro.getPlaca(), carro);
 	}
 
-	@Override
 	public void remover(Carro carro) {
 		carros.remove(carro);
 	}
 
-	@Override
 	public Carro buscarCarro(String placa) {
 		return carros.get(placa);
 	}
 
-	@Override
 	public List<Marca> getMarcas() {
 		return marcas;
 	}
 
-	@Override
-	public List<Modelo> getModelos(Marca marca) {
-		if(marca == null){
-			return new ArrayList<Modelo>();
+	public List<Modelo> buscarModelos(Marca marca) {
+		if(marca == null || !modelos.containsKey(marca.getId())){
+			return null;
 		}
 		return modelos.get(marca.getId());
 	}

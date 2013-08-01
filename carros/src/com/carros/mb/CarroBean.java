@@ -3,10 +3,10 @@ package com.carros.mb;
 import static javax.faces.context.FacesContext.getCurrentInstance;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -14,11 +14,10 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
 
-import com.carros.mock.CarrosMock;
 import com.carros.model.Carro;
 import com.carros.model.Marca;
 import com.carros.model.Modelo;
-import com.carros.service.CarrosService;
+import com.carros.service.CarroService;
 
 /**
  * 
@@ -26,28 +25,30 @@ import com.carros.service.CarrosService;
  * 
  */
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class CarroBean implements Serializable {
 
 	private String placaSelecionado;
 	
-	private CarrosService service; 
+	@EJB
+	private CarroService service; 
 	/**
 	 * Lista com o(s) <code>Carro</code>(s) apresentandas no <code>Datatable</code>.
 	 */
 	private List<Carro> carros;
-//	
-//	private List<Marca> marcas;
-//	private List<Modelo> modelos;
+	
+	private List<Marca> marcas;
+	private List<Modelo> modelos;
 	
 	/**
 	 * Referência para o carro utiliza na inclusão (nova) ou edição.
 	 */
 	private Carro carro;
+
+	private Marca marca;
 	
 	
 	public CarroBean() {
-		service = CarrosMock.getInstance();
 	}
 	
 	public void setPlacaSelecionado(String placaSelecionado) {
@@ -83,6 +84,7 @@ public class CarroBean implements Serializable {
 	
 	public String salvar() {
 		try {
+			carro.setMarca(marca);
 			service.salvar(carro);
 		} catch(Exception ex) {
 			addMessage(getMessageFromI18N("msg.erro.salvar.carro"), ex.getMessage());
@@ -120,14 +122,25 @@ public class CarroBean implements Serializable {
 	}
 
 	public List<Marca> getMarcas() {
-		return service.getMarcas();
+//		if(marcas == null){
+			marcas = service.getMarcas();
+//		}
+		return marcas;
 	}
 
 	public List<Modelo> getModelos() {
-		return service.getModelos(carro.getMarca());
+		return modelos;
 	}
 	
-	public void selecionaModelo(ValueChangeEvent e){
-		carro.setMarca((Marca) e.getNewValue());
+	public Marca getMarca(){
+		return marca;
+	}
+	
+	public void setMarca(Marca marca) {
+		this.marca = marca;
+	}
+	
+	public void marcaSelecinada(){
+		modelos = service.buscarModelos(marca);
 	}
 }
