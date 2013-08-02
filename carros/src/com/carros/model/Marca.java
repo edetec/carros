@@ -7,7 +7,7 @@ public class Marca implements Serializable{
 	private Integer id;
 	private String descricao;
 
-	public Marca(int parseInt) {
+	public Marca(Integer id) {
 		this.id = id;
 	}
 

@@ -5,10 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.validator.RegexValidator;
 
 import com.carros.model.Carro;
 import com.carros.model.Marca;
@@ -25,11 +22,8 @@ public class CarroService {
 	private Map<Integer, List<Modelo>> modelos;
 
 	public CarroService() {
-		if (carros.isEmpty()) {
 			initMarcas();
 			initModelos();
-			initCarros();
-		} 
 	}
 
 	private void initMarcas() {
@@ -94,25 +88,6 @@ public class CarroService {
 		modelo.setDescricao("Boxster");
 		listaModelos.add(modelo);
 		modelos.put(marcas.get(2).getId(), listaModelos);
-
-	}
-
-	private void initCarros() {
-		Carro carro;
-
-		carro = new Carro();
-		carro.setCor("Branco");
-		carro.setPlaca("AAA1122");
-		carro.setMarca(marcas.get(1));
-		carro.setModelo(modelos.get(carro.getMarca().getId()).get(0));
-		carros.put(carro.getPlaca(), carro);
-
-		carro = new Carro();
-		carro.setCor("Preto");
-		carro.setPlaca("BBB1122");
-		carro.setMarca(marcas.get(2));
-		carro.setModelo(modelos.get(carro.getMarca().getId()).get(1));
-		carros.put(carro.getPlaca(), carro);
 
 	}
 
