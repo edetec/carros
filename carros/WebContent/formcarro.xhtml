@@ -17,10 +17,11 @@
 				<label class="control-label"><h:outputText
 						value="#{msg['label.carro.placa']}" /></label>
 				<div class="controls">
-					<h:inputText value="#{carroBean.carro.placa}"
-						label="#{msg['label.carro.placa']}" required="true"
+					<h:inputText value="#{carroBean.carro.placa}" maxlength="8" style="text-transform: uppercase;"
+						label="#{msg['label.carro.placa']}" validatorMessage="#{msg['label.carro.placa']}: #{msg['msg.validacao']}" required="true"
 						styleClass="input-large">
-						<f:validateLength minimum="7" maximum="7" />
+						<f:validateRegex pattern="[a-zA-Z]{3}-?\d{4}" />
+						<f:validateLength minimum="7" />
 					</h:inputText>
 				</div>
 			</div>

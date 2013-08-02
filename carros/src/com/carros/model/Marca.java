@@ -3,7 +3,7 @@ package com.carros.model;
 import java.io.Serializable;
 
 public class Marca implements Serializable{
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -5194553209002018857L;
 	private Integer id;
 	private String descricao;
 

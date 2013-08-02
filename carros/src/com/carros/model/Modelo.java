@@ -3,7 +3,7 @@ package com.carros.model;
 import java.io.Serializable;
 
 public class Modelo implements Serializable{
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2140437750987176743L;
 	private Integer id;
 	private String descricao;
 
